@@ -2,7 +2,7 @@
   "name": "ctor",
   "version": "0.0.2",
   "main": "ctor.min.js",
-  "description": "The constructor of contructor for Javascript",
+  "description": "The constructor's contructor for Javascript",
   "repository": {
     "type": "git",
     "url": "https://github.com/normanzb/ctor"

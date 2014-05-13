@@ -1,7 +1,7 @@
 Ctor.JS
 =======
 
-The constructor of constructor for Javascript.
+The constructor's constructor for Javascript.
 
 Usage
 ----------------------
