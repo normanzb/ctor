@@ -85,14 +85,20 @@ define('ctor',['require'],function (Instance) {
 
     function ctor( ref ){
         var bases = [];
+        var argsHolder;
 
         var ret = function() {
-            var me = this, based = false;
+            var me = this, based = false, args;
 
-            Empty.prototype = ret.prototype;
-            var e = new Empty();
+            args = argsHolder || arguments;
+            argsHolder = null;
 
-            e.base = function () {
+            if ( !( me instanceof ret ) ) {
+                argsHolder = arguments;
+                return new ret();
+            }
+
+            me.base = function () {
                 
                 for( var i = 0 ; i < bases.length; i++ ) {
                     bases[i].apply( me, arguments );
@@ -101,31 +107,53 @@ define('ctor',['require'],function (Instance) {
                 based = true;
             };
 
-            ref.apply( e, arguments );
+            ref.apply( me, args );
 
             if ( based === false ) {
-                e.base.apply( me , arguments );
+                me.base.apply( me , args );
             }
+
+            delete me.base;
         };
 
         ret.inherit = function( ) {
-            var cur;
+            var cur, type, key;
 
             for( var i = 0 ; i < arguments.length; i++ ) {
                 cur = arguments[i];
+                type = typeof cur;
 
-                if ( bases.length == 0 ) {
-                    Empty.prototype = cur.prototype;
-                    ret.prototype = new Empty();
-                    ret.prototype.constructor == ret;
+                if ( type == 'function' ) {
+
+                    if ( bases.length == 0 ) {
+                        Empty.prototype = cur.prototype;
+                        ret.prototype = new Empty();
+                        ret.prototype.constructor == ret;
+                    }
+                    else {
+                        for( key in cur.prototype ) {
+                            ret.prototype[ key ] = cur.prototype[ key ];
+                        }
+                    }
+
+                    bases.push( cur );
+
+                }
+                else if ( type == 'object' ) {
+
+                    if ( bases.length == 0 ) {
+                        ret.prototype.constructor == cur;
+                    }
+                    else {
+                        for( key in cur ) {
+                            ret.prototype[ key ] = cur.prototype[ key ];
+                        }
+                    }
+
                 }
                 else {
-                    for( var key in cur.prototype ) {
-                        ret.prototype[ key ] = cur.prototype[ key ];
-                    }
+                    throw new Error('Cannot inherit from a ' + type);
                 }
-
-                bases.push( cur );
 
             }
 

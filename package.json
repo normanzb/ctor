@@ -1,6 +1,6 @@
 {
   "name": "ctor",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "ctor.min.js",
   "description": "The constructor's contructor for Javascript",
   "repository": {
