@@ -33,6 +33,8 @@ describe('ctor', function(){
         };
 
         var Elephant = ctor(function( name ){
+            this.base( name );
+            this.name += ' Toot';
         }).inherit(Animal);
         Elephant.prototype.talk = function() {
             return 'toot';
@@ -50,12 +52,12 @@ describe('ctor', function(){
         }).inherit(Animal);
 
         var dog = new Dog('Hachiko');
-        var fox = new Fox('McCloud');
+        var fox = Fox('McCloud');
         var elephant = new Elephant('Hajime');
         var human = new Human('Norman', 'Xu');
 
         assert.equal( dog.name + ': ' + dog.talk(), 'Hachiko: woof' );
-        assert.equal( elephant.name + ': ' + elephant.talk(), 'Hajime: toot' );
+        assert.equal( elephant.name + ': ' + elephant.talk(), 'Hajime Toot: toot' );
         assert.equal( human.name + ': ' + human.talk(), 'Norman Xu: hello' );
 
         try{
