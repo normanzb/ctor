@@ -70,6 +70,62 @@ describe('ctor', function(){
         assert.equal( ex.message, "I don't know how to talk." );
         assert.equal( elephant.poop(), crap );
     });
+
+    it('throw exception when you call base constructor after construction', function( done ){
+        var thrown = false;
+        function Base() {
+
+        }
+        var Inherit = ctor( function() {
+            var me = this;
+            setTimeout(function(){
+                try{
+                    me.base( 11 );
+                }
+                catch(ex){
+                    assert.equal( ex.message, 'Base constructor is called or be called after constructed.' );
+                    thrown = true;
+                    done();
+                }
+            })
+        } ).inherit( Base );
+
+        new Inherit();
+
+        setTimeout(function(){
+            if ( thrown == false ) {
+                assert.fail();
+                done();
+            }
+        }, 200);
+    });
+
+    it('allows you to visit base method by visiting base', function( ){
+        var steps = [];
+        function Base() {
+
+        }
+
+        Base.prototype.foo = function(arg) {
+            steps[arg] = true
+        };
+
+        var Inherit = ctor( function() {
+            var me = this;
+            this.base(1);
+            this.base.foo(0);
+            
+        } ).inherit( Base );
+
+        Inherit.prototype.bar = function(){
+            this.base.foo(1);
+        };
+
+        var instance = new Inherit();
+        instance.bar();
+
+        assert.deepEqual( steps, [true, true ] );
+    });
 });
     
 }(requirejs, require);

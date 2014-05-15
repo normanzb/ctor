@@ -12,7 +12,7 @@ define(function (Instance) {
         var argsHolder;
 
         var ret = function() {
-            var me = this, based = false, args;
+            var me = this, based = false, args, proto;
 
             args = argsHolder || arguments;
             argsHolder = null;
@@ -23,6 +23,10 @@ define(function (Instance) {
             }
 
             me.base = function () {
+
+                if ( based ) {
+                    throw new Error("Base constructor is called or be called after constructed.");
+                }
                 
                 for( var i = 0 ; i < bases.length; i++ ) {
                     bases[i].apply( me, arguments );
@@ -31,13 +35,19 @@ define(function (Instance) {
                 based = true;
             };
 
+            for( var i = 0 ; i < bases.length; i++ ) {
+                proto = bases[i].prototype;
+                for( var method in proto ) {
+                    me.base[method] = proto[method];
+                }
+            }
+
             ref.apply( me, args );
 
             if ( based === false ) {
                 me.base.apply( me , args );
             }
 
-            delete me.base;
         };
 
         ret.inherit = function( ) {
