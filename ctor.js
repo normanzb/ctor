@@ -88,7 +88,7 @@ define('ctor',['require'],function (Instance) {
         var argsHolder;
 
         var ret = function() {
-            var me = this, based = false, args, proto, inheritedBase;
+            var me = this, based = false, args;
 
             args = argsHolder || arguments;
             argsHolder = null;
@@ -113,21 +113,10 @@ define('ctor',['require'],function (Instance) {
                 based = true;
             };
 
-            for( var i = 0 ; i < bases.length; i++ ) {
-                proto = bases[i].prototype;
-                for( var method in proto ) {
-                    me.base[method] = proto[method];
-                }
-            }
-
             ref.apply( me, args );
 
             if ( based === false ) {
                 me.base.apply( me , args );
-            }
-
-            if ( inheritedBase != null ) {
-                me.base = inheritedBase;
             }
 
         };
