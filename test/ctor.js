@@ -99,43 +99,6 @@ describe('ctor', function(){
             }
         }, 200);
     });
-
-    it('allows you to visit base method by visiting base', function( ){
-        var steps = [];
-        function Base() {
-
-        }
-
-        Base.prototype.foo = function(arg) {
-            steps[arg] = true
-        };
-
-        var Inherit = ctor( function() {
-            this.base(1);
-            this.base.foo(0);
-            
-        } ).inherit( Base );
-
-        Inherit.prototype.bar = function(){
-            this.base.foo(1);
-        };
-
-        var SecondInherit = ctor( function() {
-            this.base(1);
-            this.base.foo(2);
-            
-        } ).inherit( Inherit );
-
-        SecondInherit.prototype.bar = function(){
-            this.base.bar.apply(this, arguments);
-            this.base.foo(3);
-        };
-
-        var instance = new SecondInherit();
-        instance.bar();
-
-        assert.deepEqual( steps, [ true, true, true, true ] );
-    });
 });
     
 }(requirejs, require);
