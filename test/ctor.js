@@ -111,7 +111,6 @@ describe('ctor', function(){
         };
 
         var Inherit = ctor( function() {
-            var me = this;
             this.base(1);
             this.base.foo(0);
             
@@ -121,10 +120,21 @@ describe('ctor', function(){
             this.base.foo(1);
         };
 
-        var instance = new Inherit();
+        var SecondInherit = ctor( function() {
+            this.base(1);
+            this.base.foo(2);
+            
+        } ).inherit( Inherit );
+
+        SecondInherit.prototype.bar = function(){
+            this.base.bar.apply(this, arguments);
+            this.base.foo(3);
+        };
+
+        var instance = new SecondInherit();
         instance.bar();
 
-        assert.deepEqual( steps, [true, true ] );
+        assert.deepEqual( steps, [ true, true, true, true ] );
     });
 });
     

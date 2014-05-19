@@ -12,7 +12,7 @@ define(function (Instance) {
         var argsHolder;
 
         var ret = function() {
-            var me = this, based = false, args, proto;
+            var me = this, based = false, args, proto, inheritedBase;
 
             args = argsHolder || arguments;
             argsHolder = null;
@@ -21,6 +21,8 @@ define(function (Instance) {
                 argsHolder = arguments;
                 return new ret();
             }
+
+            inheritedBase = me.base;
 
             me.base = function () {
 
@@ -46,6 +48,10 @@ define(function (Instance) {
 
             if ( based === false ) {
                 me.base.apply( me , args );
+            }
+
+            if ( inheritedBase != null ) {
+                me.base = inheritedBase;
             }
 
         };
