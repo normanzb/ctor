@@ -18,7 +18,7 @@ module.exports = function(grunt) {
             dist : {
                 options : {
                     baseUrl: './src',
-                    name: '../lib/amdshim/amdshim',
+                    name: '../lib/amdshim/amdshim.embed',
                     include: FILE_NAME_ENTRY,
                     out: FILE_NAME_OUT_MAX,
                     wrap: {
@@ -28,7 +28,7 @@ module.exports = function(grunt) {
                             "var myDefine = (function(factory){ " + 
                                 "var ret = factory();" +
                                 "typeof module != 'undefined' && (module.exports = ret);" +
-                                "global.define && global.define(function(){return ret;});" +
+                                "global.define && define(function(){return ret;});" +
                                 "global." + SPACE_NAME + " = ret; });",
                         end: 
                             "myDefine(function() { return require('" + SPACE_NAME + "'); }); \n" + 
