@@ -171,7 +171,7 @@ define('ctor',['require'],function (Instance) {
                     if ( bases.length == 0 ) {
                         Empty.prototype = cur.prototype;
                         ret.prototype = new Empty();
-                        ret.prototype.constructor == ret;
+                        ret.prototype.constructor = ret;
                     }
                     else {
                         for( key in cur.prototype ) {
